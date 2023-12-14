@@ -44,7 +44,6 @@ class Storage:
     def write(
             self, 
             object_key: str = "", 
-            token: str = "",
             data: str = "" , 
             parameter: dict = {}, 
             progress_bar: dict = {}
@@ -57,17 +56,9 @@ class Storage:
 
         if parameter:
             param["option"] = parameter.__dict__
-        # print(param)
         headers = {}
         headers[self.TIEFBLUE_HEADER_KEY] = self.encode_base64(param)
-        headers['Authorization'] = "Bearer " + token
-
-        # req = self.client.post(f"/api/upload/binary", data=body)
-        url = f"/api/upload/binary"
-        
-        req = self.client.post(url=url, host=self.host, headers=headers, data=data)
-        # req = requests.post("https://tiefblue.dp.tech/api/upload/binary", headers=headers, data=data)
-        # self._raise_error(req)
+        req = self.client.post(url="/api/upload/binary", host=self.host, headers=headers, data=data)
         return req
     
     def read(
@@ -99,21 +90,17 @@ class Storage:
             parameter = Parameter()
         parameter.contentDisposition = f'attachment; filename="{disposition}"'
         with open(file_path, 'rb') as fp:
-            res = self.write(object_key=object_key, data=fp.read(), token=token, parameter=parameter)
+            res = self.write(object_key=object_key, data=fp.read(), parameter=parameter)
             return res
     
-    
-
     def init_upload_by_part(self, object_key: str, parameter=None):
         data = {
             'path': object_key
         }
         if parameter is not None:
             data['option'] = parameter.__dict__
-
         url = f"/api/upload/multipart/init"
-        resp = self.client.post(url=url, host=self.host, data=data)
-        return resp
+        return self.client.post(url=url, host=self.host, json=data)
     
     def upload_by_part(self, object_key: str, initial_key: str, chunk_size: int, number: int, body):
         param = {
@@ -135,16 +122,14 @@ class Storage:
             'initialKey': initial_key,
             'partString': part_string
         }
-
         url = f"/api/upload/multipart/complete"
-        resp = self.client.post(url=url, host=self.host, data=data)
+        resp = self.client.post(url=url, host=self.host, json=data)
         return resp
     
     def upload_From_file_multi_part(
             self,
             object_key: str,
             file_path: str,
-            token: str,
             chunk_size: int = _DEFAULT_CHUNK_SIZE,
             parameter = None,
             progress_bar = False,
@@ -167,8 +152,7 @@ class Storage:
                         disable=not progress_bar)
             f.seek(0)
             if size < _DEFAULT_CHUNK_SIZE * 2:
-                # print(object_key)
-                self.write(object_key=object_key, token=token, data=f.buffer, parameter=parameter)
+                self.write(object_key=object_key, data=f.buffer, parameter=parameter)
                 pbar.update(100)
                 pbar.close()
                 return
