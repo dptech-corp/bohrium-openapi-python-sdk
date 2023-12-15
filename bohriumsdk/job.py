@@ -1,7 +1,10 @@
 import os
+import uuid
 from bohriumsdk.client import Client
 from bohriumsdk.storage import Storage
+from pathlib import Path
 import humps
+from typeguard import typechecked
 
 class Job:
     def __init__(
@@ -9,15 +12,24 @@ class Job:
             client: Client = None
         ) -> None:
         self.client = client
-        self.store = Storage(client = client)
 
-    def list_by_page(self, job_group_id=0, status=None, page=1, per_page=50):
+    def list_by_page(self,
+                     job_group_id=0,
+                     status=None,
+                     startTime=None,
+                     endTime=None,
+                     page=1,
+                     per_page=50):
         self.client.params['page'] = page
         self.client.params['pageSize'] = per_page
         if job_group_id > 0:
             self.client.params['groupId'] = job_group_id
         if status:
             self.client.params['status'] = status
+        if startTime:
+            self.client.params['startTime'] = startTime
+        if endTime:
+            self.client.params['endTime'] = endTime
         data = self.client.get(f'/openapi/v1/job/list', params=self.client.params)
         return data
     
@@ -65,10 +77,6 @@ class Job:
         return data
 
     def insert(self, **kwargs):
-        must_fill = ['job_type', 'oss_path', 'project_id', 'scass_type', 'cmd', 'platform', 'image_address', 'job_id']
-        for each in must_fill:
-            if each not in kwargs:
-                raise ValueError(f'{each} is required when submitting job')
         camel_data = {humps.camelize(k): v for k, v in kwargs.items()}
         if not isinstance(camel_data['ossPath'], list):
             camel_data['ossPath'] = [camel_data['ossPath']]
@@ -111,14 +119,15 @@ class Job:
     
     def get_job_token(self, job_id):
         url = f"/openapi/v1/job/{job_id}/input/token"
-        data = self.client.get(url=url, params=self.client.params)
-        print(data)
+        return self.client.get(url=url, params=self.client.params)
 
     def upload(self, file_path, object_key, token):
-        self.store.upload_From_file_multi_part(
+        client = Client()
+        client.token = token
+        store = Storage(client = client)
+        store.upload_From_file_multi_part(
             object_key=object_key,
             file_path=file_path,
-            token=token,
             progress_bar=True)
 
     def uploadr(self, work_dir, store_path, token):
@@ -130,19 +139,21 @@ class Job:
                 object_key = full_path.replace(work_dir, store_path)
                 self.upload(full_path, object_key, token)
 
+    @typechecked
     def submit(
             self,
-            project_id,
-            job_name,
-            machine_type,
-            cmd,
-            image_address,#镜像地址
-            job_group_id=0,
-            work_dir='',
-            platform='ali',
-            log_files=[],
-            out_files=[]):
-        job_params = {"input_file_type": 2,"input_file_method": 4}
+            project_id :int,
+            job_name :str,
+            machine_type :str,
+            cmd :str,
+            image_address :str, #镜像地址
+            job_group_id :int = 0,
+            work_dir :str = '',
+            result :str = '',
+            dataset_path :list = '',
+            log_files :list = [],
+            out_files :list = []) -> dict:
+
         data = self.create(project_id=project_id, name=job_name, group_id=job_group_id)
 
         if work_dir != '':
@@ -155,6 +166,13 @@ class Job:
                 object_key = os.path.join(data["storePath"], file_name)
                 self.upload(work_dir, object_key, data["token"])
         
+        ep = os.path.expanduser(result)
+        p = Path(ep).absolute().resolve()
+        p = p.joinpath(str(uuid.uuid4()) + "_temp.zip")
+
+        job_params = {"input_file_type": 2,"input_file_method": 4}
+        job_params['download_path'] = str(p.absolute().resolve())
+        job_params['dataset_path'] = dataset_path
         job_params['job_name'] = job_name
         job_params['project_id'] = project_id
         job_params['job_id'] = data["jobId"]
@@ -162,12 +180,14 @@ class Job:
         job_params['image_address'] = image_address
         job_params['scass_type'] = machine_type
         job_params['cmd'] = cmd
-        job_params['platform'] = platform
         job_params['log_files'] = log_files
         job_params['out_files'] = out_files
+        job_params['platform'] = 'ali'
         job_params['job_type'] = 'container'
         return self.insert(**job_params)
     
     def download(self, job_id, save_path):
         detail = self.detail(job_id)
-        self.store.download_from_url(detail['resultUrl'], save_path)
+        client = Client()
+        store = Storage(client = client)
+        store.download_from_url(detail['resultUrl'], save_path)
