@@ -5,7 +5,7 @@ setup(
     version="0.2.4",
     author="dingzhaohan",
     author_email="dingzh@dp.tech",
-    url="https://github.com/dingzhoahan",
+    url="https://github.com/dingzhaohan",
     description="bohrium openapi python sdk",
     packages=setuptools.find_packages(),
     install_requires=[],
