@@ -2,3 +2,5 @@ pyhumps==3.8.0
 rich==13.0.1
 typeguard==4.2.1
 requests==2.31.0
+anyio==4.1.0
+httpx==0.25.2
