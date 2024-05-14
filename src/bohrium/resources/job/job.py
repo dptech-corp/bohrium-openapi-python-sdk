@@ -94,6 +94,7 @@ class Job(SyncAPIResource):
         response = self._client.get(f"/openapi/v1/job/{job_id}")
         pprint(response.request)
         print(response.json())
+        return response.json().get("data")
 
     def create_job(
         self,
@@ -140,6 +141,11 @@ class Job(SyncAPIResource):
                 self.upload(full_path, object_key, token)
 
 
+    def download(self, job_id, save_path):
+        detail = self.detail(job_id)
+        tiefblue = Tiefblue()
+        tiefblue.download_from_url(detail["resultUrl"], save_path)
+        
 class AsyncJob(AsyncAPIResource):
     pass
 
