@@ -145,6 +145,10 @@ class BaseClient(Generic[_HttpxClientT]):
         headers = httpx.Headers(headers_dict)
         return headers or dict()
 
+    def _build_params(self, custom_params) -> dict[str, str]:
+        params = _merge_mappings(self.default_params, custom_params)
+        return params
+    
     @property
     def custom_auth(self) -> httpx.Auth | None:
         return None
@@ -160,6 +164,12 @@ class BaseClient(Generic[_HttpxClientT]):
             "Content-Type": "application/json",
         }
 
+    @property
+    def default_params(self) -> dict[str, str]:
+        return {
+            "accessKey": self.access_key
+        }
+
     def platform_headers(self) -> Dict[str, str]:
         return platform_headers(self._version)
 
@@ -173,9 +183,10 @@ class BaseClient(Generic[_HttpxClientT]):
         url = urljoin(str(self._base_url), path)
         logger.info(f"Requesting {method} {url}")
         merged_headers = self._build_headers(headers)
+        merged_params = self._build_params(kwargs.get("params"))
         try:
             return self._client.request(
-                method.upper(), url, json=json, headers=merged_headers, **kwargs
+                method.upper(), url, json=json, headers=merged_headers, params=merged_params
             )
         except httpx.TransportError as e:
             logger.error(f"Transport error: {e}.")

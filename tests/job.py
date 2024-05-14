@@ -11,4 +11,4 @@ if __name__ == "__main__":
     )
 
     # job = bohrium.job.submit("project_id", "name")
-    job = bohrium.job.get("job_id")
+    job = bohrium.job.detail("job_id")
