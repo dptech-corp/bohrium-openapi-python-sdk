@@ -54,7 +54,7 @@ class Bohrium(SyncAPIClient):
 
         if base_url is None:
             base_url = "https://openapi.dp.tech"
-
+        
         super().__init__(
             _version=__version__,
             base_url=base_url,
@@ -65,6 +65,7 @@ class Bohrium(SyncAPIClient):
         )
 
         self.job = resources.Job(self)
+        
 
     @property
     @override
@@ -119,3 +120,5 @@ class Bohrium(SyncAPIClient):
 
 class AsyncBohrium(AsyncAPIClient):
     pass
+
+

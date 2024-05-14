@@ -1,77 +1,114 @@
 
 from typing import List, Optional, Literal
+
 class JobAddRequest(object):
     def __init__(
         self, 
-        job_type: Literal["container"],
-        oss_path: List[str],
-        job_group_id: int,
-        project_id: int,
-        rerun: int,
-        job_name: str,
-        image_name: str,
-        disk_size: int,
-        scass_type: str,
-        nnode: int,
-        instance_group_id: int,
-        cmd: str,
-        log_files: List[str],
-        out_files: List[str],
-        platform: str,
-        region: str,
-        zone: str,
-        on_demand: int,
-        checkpoint_time: int,
-        checkpoint_files: List[str],
-        cli_instance_id: str,
-        download_path: str,
-        work_path: str,
-        job_id: int,
-        max_run_time: int,
-        client: str,
-        bohr_job_group_id: int,
-        input_file_type: int,
-        input_file_method: int,
-        max_reschedule_times: int,
-        input_directory: str,
-        dataset_path: List[str],
-        local_download_path: str
+        job_type: str = "",
+        oss_path: List[str] = [],
+        job_group_id: int = 0,
+        project_id: int = 0,
+        rerun: int = 0,
+        job_name: str = "",
+        image_name: str = "",
+        disk_size: int = 0,
+        scass_type: str = "",
+        nnode: int = 0,
+        cmd: str = "",
+        log_files: List[str] = [],
+        out_files: List[str] = [],
+        platform: str = "",
+        region: str = "",
+        zone: str = "",
+        on_demand: int = 0,
+        checkpoint_time: int = 0,
+        checkpoint_files: List[str] = [],
+        cli_instance_id: str = "",
+        download_path: str = "",
+        work_path: str = "",
+        job_id: int = 0,
+        max_run_time: int = 0,
+        client: str = "",
+        bohr_job_group_id: int = 0,
+        max_reschedule_times: int = 0,
+        dataset_path: List[str] = [],
+        local_download_path: str = "",
+        input_directory: str = "",
+        instance_group_id: int = 0,
+        input_file_type: int = 2,
+        input_file_method: int = 4,
     ):
-        self.job_type = job_type
-        self.oss_path = oss_path
-        self.job_group_id = job_group_id
-        self.project_id = project_id
+        self.jobType = job_type
+        self.ossPath = oss_path
+        self.jobGroupId = job_group_id
+        self.projectId = project_id
         self.rerun = rerun
-        self.job_name = job_name
-        self.image_name = image_name
-        self.disk_size = disk_size
-        self.scass_type = scass_type
+        self.jobName = job_name
+        self.imageName = image_name
+        self.diskSize = disk_size
+        self.scassType = scass_type
         self.nnode = nnode
-        self.instance_group_id = instance_group_id
+        self.instanceGroupId = instance_group_id
         self.cmd = cmd
-        self.log_files = log_files  
-        self.out_files = out_files
+        self.logFiles = log_files  
+        self.outFiles = out_files
         self.platform = platform
         self.region = region
         self.zone = zone
-        self.on_demand = on_demand
-        self.checkpoint_time = checkpoint_time
-        self.checkpoint_files = checkpoint_files
-        self.cli_instance_id = cli_instance_id
-        self.download_path = download_path
-        self.work_path = work_path
-        self.job_id = job_id
-        self.max_run_time = max_run_time
+        self.onDemand = on_demand
+        self.checkpointTime = checkpoint_time
+        self.checkpointFiles = checkpoint_files
+        self.cliInstanceId = cli_instance_id
+        self.downloadPath = download_path
+        self.workPath = work_path
+        self.jobId = job_id
+        self.maxRunTime = max_run_time
         self.client = client
-        self.bohr_job_group_id = bohr_job_group_id
-        self.input_file_type = input_file_type
-        self.input_file_method = input_file_method
-        self.max_reschedule_times = max_reschedule_times
-        self.input_directory = input_directory
-        self.dataset_path = dataset_path
-        self.local_download_path = local_download_path
+        self.bohrJobGroupId = bohr_job_group_id
+        self.inputFileType = input_file_type
+        self.inputFileMethod = input_file_method
+        self.maxRescheduleTimes = max_reschedule_times
+        self.inputDirectory = input_directory
+        self.datasetPath = dataset_path
+        self.localDownloadPath = local_download_path
         
-        
+    def to_dict(self):
+        return {
+            "jobType": self.jobType,
+            "ossPath": [self.ossPath],
+            "jobGroupId": self.jobGroupId,
+            "projectId": self.projectId,
+            "rerun": self.rerun,
+            "jobName": self.jobName,
+            "imageName": self.imageName,
+            "diskSize": self.diskSize,
+            "scassType": self.scassType,
+            "nnode": self.nnode,
+            "instanceGroupId": self.instanceGroupId,
+            "cmd": self.cmd,
+            "logFiles": self.logFiles,
+            "outFiles": self.outFiles,
+            "platform": self.platform,
+            "region": self.region,
+            "zone": self.zone,
+            "onDemand": self.onDemand,
+            "checkpointTime": self.checkpointTime,
+            "checkpointFiles": self.checkpointFiles,
+            "cliInstanceId": self.cliInstanceId,
+            "downloadPath": self.downloadPath,
+            "workPath": self.workPath,
+            "jobId": self.jobId,
+            "maxRunTime": self.maxRunTime,
+            "client": self.client,
+            "bohrJobGroupId": self.bohrJobGroupId,
+            "inputFileType": self.inputFileType,
+            "inputFileMethod": self.inputFileMethod,
+            "maxRescheduleTimes": self.maxRescheduleTimes,
+            "inputDirectory": self.inputDirectory,
+            "datasetPath": self.datasetPath,
+            "localDownloadPath": self.localDownloadPath
+        }
+    
 """
 
 
