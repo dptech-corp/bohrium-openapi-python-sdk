@@ -7,8 +7,6 @@ from typing import Optional
 import httpx
 from typing_extensions import Literal
 
-from ._utils import is_dict
-
 __all__ = [
     "BadRequestError",
     "AuthenticationError",
@@ -52,7 +50,7 @@ class APIError(BohriumError):
         self.message = message
         self.body = body
 
-        if is_dict(body):
+        if isinstance(body, dict):
             pass
         else:
             self.code = None

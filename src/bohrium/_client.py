@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import Mapping
 
-import httpx
+from httpx import URL, Client, Response, Timeout
 from typing_extensions import override
 
 from . import _exceptions, resources
@@ -23,14 +23,12 @@ class Bohrium(SyncAPIClient):
 
     def __init__(
         self,
-        *,
         access_key: str | None = None,
-        base_url: str | httpx.URL | None = None,
+        base_url: str | URL | None = None,
         project_id: str | None = None,
-        timeout: None,
-        max_retries: int = DEFAULT_MAX_RETRIES,
-        default_headers: Mapping[str, str] | None = None,
-        http_client: httpx.Client | None = None,
+        timeout: float | Timeout | None = 30.0,
+        max_retries: int | None = DEFAULT_MAX_RETRIES,
+        http_client: Client | None = None,
     ) -> None:
         """Construct a new synchronous openai client instance."""
         if access_key is None:
@@ -58,32 +56,31 @@ class Bohrium(SyncAPIClient):
             base_url = "https://openapi.dp.tech"
 
         super().__init__(
-            version=__version__,
+            _version=__version__,
             base_url=base_url,
             max_retries=max_retries,
             timeout=timeout,
             http_client=http_client,
-            custom_headers=default_headers,
+            custom_headers=self.default_headers,
         )
 
         self.job = resources.Job(self)
 
-    @override
-    def auth_headers(self) -> dict[str, str]:
-        access_key = self.access_key
-        return {"Authorization": f"Bearer {access_key}"}
-
     @property
     @override
     def default_headers(self) -> dict[str, str]:
-        pass
+        return {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.access_key}",
+        }
 
     def _make_status_error(
         self,
         err_msg: str,
         *,
         body: object,
-        response: httpx.Response,
+        response: Response,
     ) -> APIStatusError:
         data = body.get("error", body) if isinstance(body, Mapping) else body
         if response.status_code == 400:
