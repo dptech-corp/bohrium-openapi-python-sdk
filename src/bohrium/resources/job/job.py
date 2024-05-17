@@ -87,7 +87,8 @@ class Job(SyncAPIResource):
         # log.info(f"log job {job_id}")
         response = self._client.get(f"/openapi/v1/job/{job_id}/log", params={"logFile": log_file, "page": page, "pageSize": page_size})
         pprint(response.request)
-        print(response.json())
+        print(response.json().get("data")["log"])
+        return response.json().get("data")["log"]
         
     def detail(self, job_id):
         # log.info(f"detail job {job_id}")
@@ -103,12 +104,15 @@ class Job(SyncAPIResource):
         group_id: Optional[int] = 0,
     ):
         # log.info(f"create job {name}")
+        response = self._client.get(f"/openapi/v1/ak/get")
+        
         data = {
+            "userId": response.json().get("data").get("user_id"),
             "projectId": project_id,
             "name": name,
             "bohrGroupId": group_id,
         }
-        response = self._client.post(f"/openapi/v1/job/create", json=data)
+        response = self._client.post(f"/openapi/v1/job/pre_create", json=data)
         pprint(response.request)
         print(response.json())
         return response.json().get("data")
