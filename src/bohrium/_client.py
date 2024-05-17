@@ -1,9 +1,7 @@
-# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
-
 from __future__ import annotations
 
 import os
-from typing import Mapping
+from typing import Mapping, Optional, Union
 
 from httpx import URL, Client, Response, Timeout
 from typing_extensions import override
@@ -23,12 +21,12 @@ class Bohrium(SyncAPIClient):
 
     def __init__(
         self,
-        access_key: str | None = None,
-        base_url: str | URL | None = None,
-        project_id: str | None = None,
-        timeout: float | Timeout | None = 30.0,
-        max_retries: int | None = DEFAULT_MAX_RETRIES,
-        http_client: Client | None = None,
+        access_key: Optional[str] = None,
+        base_url: Optional[Union[str, URL]] = None,
+        project_id: Optional[str] = None,
+        timeout: Optional[Union[float, Timeout]] = 30.0,
+        max_retries: Optional[int] = DEFAULT_MAX_RETRIES,
+        http_client: Optional[Client] = None,
     ) -> None:
         """Construct a new synchronous openai client instance."""
         if access_key is None:
@@ -54,7 +52,7 @@ class Bohrium(SyncAPIClient):
 
         if base_url is None:
             base_url = "https://openapi.dp.tech"
-        
+
         super().__init__(
             _version=__version__,
             base_url=base_url,
@@ -65,7 +63,6 @@ class Bohrium(SyncAPIClient):
         )
 
         self.job = resources.Job(self)
-        
 
     @property
     @override
@@ -120,5 +117,3 @@ class Bohrium(SyncAPIClient):
 
 class AsyncBohrium(AsyncAPIClient):
     pass
-
-

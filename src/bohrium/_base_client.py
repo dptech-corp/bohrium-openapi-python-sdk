@@ -12,6 +12,7 @@ from typing import (
     TypeVar,
     Union,
     cast,
+    Optional
 )
 from urllib.parse import urljoin
 
@@ -22,7 +23,7 @@ from httpx import URL, Limits, Timeout
 from ._constants import DEFAULT_CONNECTION_LIMITS, DEFAULT_MAX_RETRIES, DEFAULT_TIMEOUT
 from ._utils import lru_cache
 
-logger = logging.Logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 Arch = Union[Literal["x32", "x64", "arm", "arm64", "unknown"]]
 
@@ -118,12 +119,12 @@ class BaseClient(Generic[_HttpxClientT]):
     def __init__(
         self,
         *,
-        _version: str | None = None,
-        base_url: str | URL,
+        _version: Optional[str] = None,
+        base_url: Union[str, URL],
         limits: httpx.Limits,
         max_retries: int = DEFAULT_MAX_RETRIES,
-        timeout: float | Timeout | None = DEFAULT_TIMEOUT,
-        custom_headers: Mapping[str, str] | None = None,
+        timeout: Optional[Union[float, httpx.Timeout]] = DEFAULT_TIMEOUT,
+        custom_headers: Optional[Mapping[str, str]] = None,
     ):
         self._base_url = self._enforce_trailing_slash(URL(base_url))
         self._version = _version
@@ -148,7 +149,7 @@ class BaseClient(Generic[_HttpxClientT]):
     def _build_params(self, custom_params) -> dict[str, str]:
         params = _merge_mappings(self.default_params, custom_params)
         return params
-    
+
     @property
     def custom_auth(self) -> httpx.Auth | None:
         return None
@@ -224,13 +225,13 @@ class SyncAPIClient(BaseClient[httpx.Client]):
 
     def __init__(
         self,
-        base_url: str | URL,
+        base_url: Union[str, httpx.URL],
         max_retries: int = DEFAULT_MAX_RETRIES,
-        timeout: float | Timeout | None = DEFAULT_TIMEOUT,
+        timeout: Union[float, Timeout, None] = DEFAULT_TIMEOUT,
         limits: Limits = DEFAULT_CONNECTION_LIMITS,
-        _version: str | None = None,
-        http_client: httpx.Client | None = None,
-        custom_headers: Mapping[str, str] | None = None,
+        _version: Optional[str] = None,
+        http_client: Optional[httpx.Client] = None,
+        custom_headers: Optional[Mapping[str, str]] = None,
     ) -> None:
 
         if http_client is not None and not isinstance(
