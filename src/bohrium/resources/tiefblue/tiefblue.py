@@ -4,6 +4,7 @@ import base64
 import os
 from tqdm import tqdm
 import time
+from typing import Union
 from ..._base_client import SyncAPIClient
 from httpx import URL
 from pprint import pprint
@@ -28,7 +29,7 @@ class Tiefblue:
 
     def __init__(
             self,
-            base_url: str | URL | None = None,
+            base_url: Union[str, URL] = None,
         ) -> None:
         
         if base_url is None:

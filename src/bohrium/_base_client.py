@@ -9,10 +9,10 @@ from typing import (
     Generic,
     Literal,
     Mapping,
+    Optional,
     TypeVar,
     Union,
     cast,
-    Optional
 )
 from urllib.parse import urljoin
 
@@ -114,7 +114,7 @@ class BaseClient(Generic[_HttpxClientT]):
     max_retries: int
     timeout: Union[float, Timeout, None]
     _limits: httpx.Limits
-    _version: str | None
+    _version: Union[str, None]
 
     def __init__(
         self,
@@ -151,7 +151,7 @@ class BaseClient(Generic[_HttpxClientT]):
         return params
 
     @property
-    def custom_auth(self) -> httpx.Auth | None:
+    def custom_auth(self) -> Union[httpx.Auth, None]:
         return None
 
     @property
@@ -167,9 +167,7 @@ class BaseClient(Generic[_HttpxClientT]):
 
     @property
     def default_params(self) -> dict[str, str]:
-        return {
-            "accessKey": self.access_key
-        }
+        return {"accessKey": self.access_key}
 
     def platform_headers(self) -> Dict[str, str]:
         return platform_headers(self._version)
@@ -187,7 +185,11 @@ class BaseClient(Generic[_HttpxClientT]):
         merged_params = self._build_params(kwargs.get("params"))
         try:
             return self._client.request(
-                method.upper(), url, json=json, headers=merged_headers, params=merged_params
+                method.upper(),
+                url,
+                json=json,
+                headers=merged_headers,
+                params=merged_params,
             )
         except httpx.TransportError as e:
             logger.error(f"Transport error: {e}.")

@@ -8,8 +8,10 @@ from pprint import pprint
 from typing import Optional
 
 from ..._resource import AsyncAPIResource, SyncAPIResource
+from ..._response import APIResponse
 from ...types.job.job import JobAddRequest
 from ..tiefblue.tiefblue import Tiefblue
+
 
 log = logging.getLogger(__name__)
 
@@ -19,8 +21,11 @@ class Job(SyncAPIResource):
     def detail(self, job_id):
         log.info(f"detail job {job_id}")
         response = self._client.get(f"/openapi/v1/job/{job_id}")
+
+        log.info(response.json())
         log.debug(response)
-        return response.json().get("data")
+        return APIResponse(response).json
+        #return response.json().get("data")
 
     def submit(
         self,
