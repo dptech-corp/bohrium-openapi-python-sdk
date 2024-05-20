@@ -17,7 +17,7 @@ class Bohrium(SyncAPIClient):
 
     # client options
     access_key: str
-    project_id: str | None
+    project_id: Union[str, None]
 
     def __init__(
         self,
