@@ -24,7 +24,7 @@ class Job(SyncAPIResource):
 
         log.info(response.json())
         log.debug(response)
-        return APIResponse(response).json
+        return APIResponse(response).json.get("data")
         #return response.json().get("data")
 
     def submit(
