@@ -114,15 +114,24 @@ class Job(SyncAPIResource):
         group_id: Optional[int] = 0,
     ):
         # log.info(f"create job {name}")
-        response = self._client.get("/openapi/v1/ak/get")
+        # response = self._client.get("/openapi/v1/ak/get")
 
+        # data = {
+        #     "userId": response.json().get("data").get("user_id"),
+        #     "projectId": project_id,
+        #     "name": name,
+        #     "bohrGroupId": group_id,
+        # }
+        # response = self._client.post("/openapi/v1/job/pre_create", json=data)
+        # pprint(response.request)
+        # print(response.json())
+        # return response.json().get("data")
         data = {
-            "userId": response.json().get("data").get("user_id"),
             "projectId": project_id,
             "name": name,
             "bohrGroupId": group_id,
         }
-        response = self._client.post("/openapi/v1/job/pre_create", json=data)
+        response = self._client.post(f"/openapi/v1/job/create", json=data)
         pprint(response.request)
         print(response.json())
         return response.json().get("data")
