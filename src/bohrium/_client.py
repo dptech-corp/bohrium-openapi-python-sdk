@@ -36,7 +36,7 @@ class Bohrium(SyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the ACCESS_KEY environment variable"
             )
         self.access_key = access_key
-
+        self.params = {"accessKey": self.access_key}
         if project_id is None:
             project_id = os.environ.get("BOHRIUM_PROJECT_ID")
 

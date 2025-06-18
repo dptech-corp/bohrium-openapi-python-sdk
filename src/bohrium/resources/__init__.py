@@ -1,4 +1,4 @@
 
 from .job import Job, AsyncJob
-
-__all__ = ["Job", "AsyncJob"]
+from .tiefblue import Tiefblue
+__all__ = ["Job", "AsyncJob", "Tiefblue"]

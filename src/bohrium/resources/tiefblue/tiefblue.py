@@ -55,6 +55,7 @@ class Tiefblue:
             object_key: str = "", 
             data: str = "" , 
             parameter: dict = {}, 
+            token: str = "",
             progress_bar: dict = {}
         ) -> dict:
 
@@ -65,7 +66,9 @@ class Tiefblue:
 
         if parameter:
             param["option"] = parameter.__dict__
-        headers = {}
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
         headers[self.TIEFBLUE_HEADER_KEY] = self.encode_base64(param)
         req = self.client.post("/api/upload/binary", headers=headers, data=data)
         pprint(req.request)
@@ -143,7 +146,8 @@ class Tiefblue:
             chunk_size: int = _DEFAULT_CHUNK_SIZE,
             parameter = None,
             progress_bar = False,
-            need_parse = False
+            need_parse = False,
+            token: str = ""
         ) -> None:
         if not os.path.exists(file_path):
             raise FileNotFoundError
@@ -162,7 +166,7 @@ class Tiefblue:
                         disable=not progress_bar)
             f.seek(0)
             if size < _DEFAULT_CHUNK_SIZE * 2:
-                self.write(object_key=object_key, data=f.buffer, parameter=parameter)
+                self.write(object_key=object_key, data=f.buffer, parameter=parameter, token=token)
                 pbar.update(100)
                 pbar.close()
                 return

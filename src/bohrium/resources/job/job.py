@@ -2,7 +2,7 @@ import logging
 import os
 import uuid
 from pathlib import Path
-
+import humps
 # from ..._resource import BaseClient
 from pprint import pprint
 from typing import Optional
@@ -18,6 +18,21 @@ log = logging.getLogger(__name__)
 
 class Job(SyncAPIResource):
 
+    def create(self, project_id, name='', group_id=0):
+        data = {
+            'projectId': project_id
+        }
+        if name:
+            data['name'] = name
+        if group_id:
+            data['bohrGroupId'] = group_id
+        try:
+            data = self._client.post(f'/openapi/v1/job/create', json=data, params=self._client.params)
+            data = data.json()
+        except Exception as e:
+            raise e
+        return data.get("data", {})
+    
     def detail(self, job_id):
         log.info(f"detail job {job_id}")
         response = self._client.get(f"/openapi/v1/job/{job_id}")
@@ -73,11 +88,18 @@ class Job(SyncAPIResource):
         )
         return self.insert(job_add_request.to_dict())
 
-    def insert(self, data):
-        # log.info(f"insert job {data}")
-        response = self._client.post("/openapi/v2/job/add", json=data)
+    def insert(self, **kwargs):
+        camel_data = {humps.camelize(k): v for k, v in kwargs.items()}
+        if not isinstance(camel_data['ossPath'], list):
+            camel_data['ossPath'] = [camel_data['ossPath']]
+        if 'logFile' in camel_data:
+            camel_data['logFiles'] = camel_data['logFile']
+        if 'logFiles' in camel_data and not isinstance(camel_data['logFiles'], list):
+            camel_data['logFiles'] = [camel_data['logFiles']]
+        response = self._client.post("/openapi/v2/job/add", json=camel_data)
         pprint(response.request)
         print(response.json())
+        return response.json().get("data")
 
     def delete(self, job_id):
         # log.info(f"delete job {job_id}")
