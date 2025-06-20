@@ -10,8 +10,8 @@ def read_file(filename):
 
 
 setup(
-    name="bohrium",
-    version="0.1.0",
+    name="bohrium-sdk",
+    version="0.7.0",
     author="dingzhaohan",
     author_email="dingzh@dp.tech",
     url="https://github.com/dingzhaohan",

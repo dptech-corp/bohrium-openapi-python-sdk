@@ -71,6 +71,7 @@ class Bohrium(SyncAPIClient):
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_key}",
+            "x-app-key": "agent",
         }
 
     def _make_status_error(
