@@ -22,6 +22,7 @@ class Bohrium(SyncAPIClient):
     def __init__(
         self,
         access_key: Optional[str] = None,
+        app_key: Optional[str] = None,
         base_url: Optional[Union[str, URL]] = None,
         project_id: Optional[str] = None,
         timeout: Optional[Union[float, Timeout]] = 30.0,
@@ -36,6 +37,7 @@ class Bohrium(SyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the ACCESS_KEY environment variable"
             )
         self.access_key = access_key
+        self.app_key = app_key or os.environ.get("BOHRIUM_APP_KEY")
         self.params = {"accessKey": self.access_key}
         if project_id is None:
             project_id = os.environ.get("BOHRIUM_PROJECT_ID")
@@ -71,7 +73,7 @@ class Bohrium(SyncAPIClient):
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_key}",
-            "x-app-key": "agent",
+            "x-app-key": self.app_key,
         }
 
     def _make_status_error(
