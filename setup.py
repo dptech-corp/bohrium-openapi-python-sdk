@@ -11,7 +11,7 @@ def read_file(filename):
 
 setup(
     name="bohrium-sdk",
-    version="0.7.0",
+    version="0.8.0",
     author="dingzhaohan",
     author_email="dingzh@dp.tech",
     url="https://github.com/dingzhaohan",
