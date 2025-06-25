@@ -143,6 +143,8 @@ class BaseClient(Generic[_HttpxClientT]):
         headers_dict = _merge_mappings(
             self.default_headers, self._custom_headers, custom_headers
         )
+        # 过滤掉 value 为 None 的 header
+        headers_dict = {k: v for k, v in headers_dict.items() if v is not None}
         headers = httpx.Headers(headers_dict)
         return headers or dict()
 
@@ -177,7 +179,7 @@ class BaseClient(Generic[_HttpxClientT]):
         exceptions=(httpx.RequestError,),
     )
     def _request(
-        self, method: str, path: str, json=None, headers=None, **kwargs
+        self, method: str, path: str, json=None, headers=None, data=None, **kwargs
     ) -> httpx.Response:
         url = urljoin(str(self._base_url), path)
         logger.info(f"Requesting {method} {url}")
@@ -188,6 +190,7 @@ class BaseClient(Generic[_HttpxClientT]):
                 method.upper(),
                 url,
                 json=json,
+                data=data,
                 headers=merged_headers,
                 params=merged_params,
             )

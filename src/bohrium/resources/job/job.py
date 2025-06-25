@@ -58,7 +58,6 @@ class Job(SyncAPIResource):
     ):
         # log.info(f"submit job {name},project_id:{project_id}")
         data = self.create_job(project_id, job_name, job_group_id)
-        print(data)
         if work_dir != "":
             if not os.path.exists(work_dir):
                 raise FileNotFoundError
@@ -97,27 +96,22 @@ class Job(SyncAPIResource):
         if 'logFiles' in camel_data and not isinstance(camel_data['logFiles'], list):
             camel_data['logFiles'] = [camel_data['logFiles']]
         response = self._client.post("/openapi/v2/job/add", json=camel_data)
-        pprint(response.request)
-        print(response.json())
         return response.json().get("data")
 
     def delete(self, job_id):
         # log.info(f"delete job {job_id}")
         response = self._client.post(f"/openapi/v1/job/del/{job_id}")
-        pprint(response.request)
-        print(response.json())
+
 
     def terminate(self, job_id):
         # log.info(f"terminate job {job_id}")
         response = self._client.post(f"/openapi/v1/job/terminate/{job_id}")
-        pprint(response.request)
-        print(response.json())
+
 
     def kill(self, job_id):
         # log.info(f"kill job {job_id}")
         response = self._client.post(f"/openapi/v1/job/kill/{job_id}")
-        pprint(response.request)
-        print(response.json())
+    
 
     def log(self, job_id, log_file="STDOUTERR", page=-1, page_size=8192):
         # log.info(f"log job {job_id}")
@@ -125,8 +119,7 @@ class Job(SyncAPIResource):
             f"/openapi/v1/job/{job_id}/log",
             params={"logFile": log_file, "page": page, "pageSize": page_size},
         )
-        pprint(response.request)
-        print(response.json().get("data")["log"])
+
         return response.json().get("data")["log"]
 
     def create_job(
@@ -154,8 +147,7 @@ class Job(SyncAPIResource):
             "bohrGroupId": group_id,
         }
         response = self._client.post(f"/openapi/v1/job/create", json=data)
-        pprint(response.request)
-        print(response.json())
+
         return response.json().get("data")
 
     def create_job_group(self, project_id, job_group_name):
@@ -164,9 +156,8 @@ class Job(SyncAPIResource):
             "/openapi/v1/job_group/add",
             json={"name": job_group_name, "projectId": project_id},
         )
-        pprint(response.request)
-        print(response.json())
-
+        return response.json().get("data")
+    
     def upload(
         self,
         file_path: str,
