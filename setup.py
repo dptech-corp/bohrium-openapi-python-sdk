@@ -24,7 +24,15 @@ setup(
         # include .txt all of them
         "": ["*.txt"]
     },
-    install_requires=[],
+    install_requires=[
+        "distro",
+        "httpx",
+        "typing_extensions",
+        "anyio",
+        "humps",
+        "requests",
+        "tqdm",
+    ],
     python_requires=">=3.7",
     entry_points={},
 )
