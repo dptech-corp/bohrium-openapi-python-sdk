@@ -11,7 +11,7 @@ def read_file(filename):
 
 setup(
     name="bohrium-sdk",
-    version="0.12.0",
+    version="0.13.0",
     author="dingzhaohan",
     author_email="dingzh@dp.tech",
     url="https://github.com/dingzhaohan",
@@ -29,7 +29,7 @@ setup(
         "httpx",
         "typing_extensions",
         "anyio",
-        "humps",
+        "pyhumps",
         "requests",
         "tqdm",
     ],
