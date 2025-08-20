@@ -39,6 +39,7 @@ class Tiefblue:
             base_url = "https://tiefblue.dp.tech"
             
         self.base_url = base_url
+        self.host = base_url  # 添加host属性
         self.client = SyncAPIClient(base_url=base_url)
         self.client.access_key = None
 
@@ -232,7 +233,7 @@ class Tiefblue:
     def _parse_ap_name_and_tag(self, input_path: str):
         l = input_path.split('/')
         if len(l) < 3:
-            return "", "". l
+            return "", "", l
         return l[0], l[1], "/".join(l[2:])
 
 
