@@ -214,7 +214,6 @@ class Tiefblue:
                 break
             else:
                 time.sleep(retry_count)
-                ret = None
         if ret is not None:
             ret.raise_for_status()
             with open(save_file, "wb") as f:

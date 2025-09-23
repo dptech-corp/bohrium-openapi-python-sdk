@@ -27,7 +27,7 @@ class Job(SyncAPIResource):
         if group_id:
             data['bohrGroupId'] = group_id
         try:
-            data = self._client.post(f'/openapi/v1/job/create', json=data, params=self._client.params)
+            data = self._client.post(f'/openapi/v1/sandbox/job/create', json=data, params=self._client.params)
             data = data.json()
         except Exception as e:
             raise e
@@ -35,7 +35,7 @@ class Job(SyncAPIResource):
     
     def detail(self, job_id):
         log.info(f"detail job {job_id}")
-        response = self._client.get(f"/openapi/v1/job/{job_id}")
+        response = self._client.get(f"/openapi/v1/sandbox/job/{job_id}")
 
         log.info(response.json())
         log.debug(response)
@@ -95,28 +95,28 @@ class Job(SyncAPIResource):
             camel_data['logFiles'] = camel_data['logFile']
         if 'logFiles' in camel_data and not isinstance(camel_data['logFiles'], list):
             camel_data['logFiles'] = [camel_data['logFiles']]
-        response = self._client.post("/openapi/v2/job/add", json=camel_data)
+        response = self._client.post("/openapi/v1/sandbox/job/add", json=camel_data)
         return response.json().get("data")
 
     def delete(self, job_id):
         # log.info(f"delete job {job_id}")
-        response = self._client.post(f"/openapi/v1/job/del/{job_id}")
+        response = self._client.post(f"/openapi/v1/sandbox/job/del/{job_id}")
 
 
     def terminate(self, job_id):
         # log.info(f"terminate job {job_id}")
-        response = self._client.post(f"/openapi/v1/job/terminate/{job_id}")
+        response = self._client.post(f"/openapi/v1/sandbox/job/terminate/{job_id}")
 
 
     def kill(self, job_id):
         # log.info(f"kill job {job_id}")
-        response = self._client.post(f"/openapi/v1/job/kill/{job_id}")
+        response = self._client.post(f"/openapi/v1/sandbox/job/kill/{job_id}")
     
 
     def log(self, job_id, log_file="STDOUTERR", page=-1, page_size=8192):
         # log.info(f"log job {job_id}")
         response = self._client.get(
-            f"/openapi/v1/job/{job_id}/log",
+            f"/openapi/v1/sandbox/job/{job_id}/log",
             params={"logFile": log_file, "page": page, "pageSize": page_size},
         )
 
@@ -146,7 +146,7 @@ class Job(SyncAPIResource):
             "name": name,
             "bohrGroupId": group_id,
         }
-        response = self._client.post(f"/openapi/v1/job/create", json=data)
+        response = self._client.post(f"/openapi/v1/sandbox/job/create", json=data)
 
         return response.json().get("data")
 
