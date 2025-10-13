@@ -97,6 +97,7 @@ class Job(SyncAPIResource):
         if 'logFiles' in camel_data and not isinstance(camel_data['logFiles'], list):
             camel_data['logFiles'] = [camel_data['logFiles']]
         response = self._client.post("/openapi/v1/sandbox/job/add" if USE_SANDBOX else "/openapi/v2/job/add", json=camel_data)
+        log.info(f'[insert] json={camel_data}, response={response.json()}')
         return response.json().get("data")
 
     def delete(self, job_id):
