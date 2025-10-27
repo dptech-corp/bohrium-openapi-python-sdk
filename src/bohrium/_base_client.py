@@ -185,6 +185,33 @@ class BaseClient(Generic[_HttpxClientT]):
         logger.info(f"Requesting {method} {url}")
         merged_headers = self._build_headers(headers)
         merged_params = self._build_params(kwargs.get("params"))
+        
+        # 处理文件上传
+        request_kwargs = {
+            "method": method.upper(),
+            "url": url,
+            "params": merged_params,
+        }
+        
+        # 处理超时参数
+        if "timeout" in kwargs:
+            request_kwargs["timeout"] = kwargs["timeout"]
+        
+        if json is not None:
+            request_kwargs["json"] = json
+            request_kwargs["headers"] = merged_headers
+        elif "files" in kwargs:
+            # 当有files参数时，不使用json参数，而是使用files和data
+            # 不设置headers，让httpx自动处理multipart/form-data
+            request_kwargs["files"] = kwargs["files"]
+            if "data" in kwargs:
+                request_kwargs["data"] = kwargs["data"]
+        elif "data" in kwargs:
+            request_kwargs["data"] = kwargs["data"]
+            request_kwargs["headers"] = merged_headers
+        else:
+            request_kwargs["headers"] = merged_headers
+            
         try:
             return self._client.request(
                 method.upper(),

@@ -14,10 +14,14 @@ from ._version import __version__
 
 class Bohrium(SyncAPIClient):
     job: resources.Job
+    sigma_search: resources.SigmaSearch
+    uni_parser: resources.UniParser
+    knowledge_base: resources.KnowledgeBase
+    paper: resources.Paper
 
     # client options
     access_key: str
-    project_id: Union[str, None]
+    project_id: Optional[str]
 
     def __init__(
         self,
@@ -42,11 +46,6 @@ class Bohrium(SyncAPIClient):
         if project_id is None:
             project_id = os.environ.get("BOHRIUM_PROJECT_ID")
 
-        if project_id is None:
-            raise BohriumError(
-                "The project_id client option must be set either by passing project_id to the client or by setting the BOHRIUM_PROJECT_ID environment variable"
-            )
-
         self.project_id = project_id
 
         if base_url is None:
@@ -65,6 +64,10 @@ class Bohrium(SyncAPIClient):
         )
 
         self.job = resources.Job(self)
+        self.sigma_search = resources.SigmaSearch(self)
+        self.uni_parser = resources.UniParser(self)
+        self.knowledge_base = resources.KnowledgeBase(self)
+        self.paper = resources.Paper(self)
 
     @property
     @override
