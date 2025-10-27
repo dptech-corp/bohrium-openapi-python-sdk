@@ -180,7 +180,7 @@ class Tiefblue:
                 pbar.close()
                 return
             chunks = split_size_by_part_size(size, chunk_size)
-            initial_key = self.init_upload_by_part(object_key, parameter, token).get('initialKey')
+            initial_key = self.init_upload_by_part(object_key, parameter, token).json()['data'].get('initialKey')
             part_string = []
             uploaded = 0
             for c in chunks:
@@ -190,7 +190,7 @@ class Tiefblue:
                     object_key, initial_key, chunk_size=c.Size, number=c.Number,
                     body=chunk_data, token=token
                 )
-                part_string.append(resp.get('partString'))
+                part_string.append(resp.json()['data'].get('partString'))
                 uploaded += c.Size
                 percent = uploaded * 100 / size
                 pbar.n = percent
@@ -214,7 +214,6 @@ class Tiefblue:
                 break
             else:
                 time.sleep(retry_count)
-                ret = None
         if ret is not None:
             ret.raise_for_status()
             with open(save_file, "wb") as f:
