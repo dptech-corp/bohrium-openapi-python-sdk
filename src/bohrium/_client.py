@@ -14,14 +14,19 @@ from ._version import __version__
 
 class Bohrium(SyncAPIClient):
     job: resources.Job
+    sigma_search: resources.SigmaSearch
+    uni_parser: resources.UniParser
+    knowledge_base: resources.KnowledgeBase
+    paper: resources.Paper
 
     # client options
     access_key: str
-    project_id: Union[str, None]
+    project_id: Optional[str]
 
     def __init__(
         self,
         access_key: Optional[str] = None,
+        app_key: Optional[str] = None,
         base_url: Optional[Union[str, URL]] = None,
         project_id: Optional[str] = None,
         timeout: Optional[Union[float, Timeout]] = 30.0,
@@ -36,14 +41,10 @@ class Bohrium(SyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the ACCESS_KEY environment variable"
             )
         self.access_key = access_key
-
+        self.app_key = app_key or os.environ.get("BOHRIUM_APP_KEY")
+        self.params = {"accessKey": self.access_key}
         if project_id is None:
             project_id = os.environ.get("BOHRIUM_PROJECT_ID")
-
-        if project_id is None:
-            raise BohriumError(
-                "The project_id client option must be set either by passing project_id to the client or by setting the BOHRIUM_PROJECT_ID environment variable"
-            )
 
         self.project_id = project_id
 
@@ -63,6 +64,10 @@ class Bohrium(SyncAPIClient):
         )
 
         self.job = resources.Job(self)
+        self.sigma_search = resources.SigmaSearch(self)
+        self.uni_parser = resources.UniParser(self)
+        self.knowledge_base = resources.KnowledgeBase(self)
+        self.paper = resources.Paper(self)
 
     @property
     @override
@@ -71,6 +76,7 @@ class Bohrium(SyncAPIClient):
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.access_key}",
+            "x-app-key": self.app_key,
         }
 
     def _make_status_error(

@@ -39,6 +39,7 @@ class Tiefblue:
             base_url = "https://tiefblue.dp.tech"
             
         self.base_url = base_url
+        self.host = base_url  # 添加host属性
         self.client = SyncAPIClient(base_url=base_url)
         self.client.access_key = None
 
@@ -55,6 +56,7 @@ class Tiefblue:
             object_key: str = "", 
             data: str = "" , 
             parameter: dict = {}, 
+            token: str = "",
             progress_bar: dict = {}
         ) -> dict:
 
@@ -65,10 +67,12 @@ class Tiefblue:
 
         if parameter:
             param["option"] = parameter.__dict__
-        headers = {}
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
         headers[self.TIEFBLUE_HEADER_KEY] = self.encode_base64(param)
         req = self.client.post("/api/upload/binary", headers=headers, data=data)
-        pprint(req.request)
+
         return req
     
     def read(
@@ -100,40 +104,48 @@ class Tiefblue:
             parameter = Parameter()
         parameter.contentDisposition = f'attachment; filename="{disposition}"'
         with open(file_path, 'rb') as fp:
-            res = self.write(object_key=object_key, data=fp.read(), parameter=parameter)
+            res = self.write(object_key=object_key, data=fp.read(), parameter=parameter, token=token)
             return res
     
-    def init_upload_by_part(self, object_key: str, parameter=None):
+    def init_upload_by_part(self, object_key: str, parameter=None, token: str = ""):
         data = {
             'path': object_key
         }
         if parameter is not None:
             data['option'] = parameter.__dict__
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
         url = f"/api/upload/multipart/init"
-        return self.client.post(url, host=self.host, json=data)
+        return self.client.post(url, host=self.host, headers=headers, json=data)
     
-    def upload_by_part(self, object_key: str, initial_key: str, chunk_size: int, number: int, body):
+    def upload_by_part(self, object_key: str, initial_key: str, chunk_size: int, number: int, body, token: str = ""):
         param = {
             'initialKey': initial_key,
             'number': number,
             'partSize': chunk_size,
             'objectKey': object_key
         }
-        headers = {}
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
         headers[self.TIEFBLUE_HEADER_KEY] = self._dump_parameter(param)
         url = f"/api/upload/multipart/upload"
         resp = self.client.post(url, host=self.host, data=body, headers=headers)
         return resp
 
 
-    def complete_upload_by_part(self, object_key, initial_key, part_string):
+    def complete_upload_by_part(self, object_key, initial_key, part_string, token):
         data = {
             'path': object_key,
             'initialKey': initial_key,
             'partString': part_string
         }
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
         url = f"/api/upload/multipart/complete"
-        resp = self.client.post(url, host=self.host, json=data)
+        resp = self.client.post(url, host=self.host, headers=headers, json=data)
         return resp
     
     def upload_From_file_multi_part(
@@ -143,7 +155,8 @@ class Tiefblue:
             chunk_size: int = _DEFAULT_CHUNK_SIZE,
             parameter = None,
             progress_bar = False,
-            need_parse = False
+            need_parse = False,
+            token: str = ""
         ) -> None:
         if not os.path.exists(file_path):
             raise FileNotFoundError
@@ -157,27 +170,34 @@ class Tiefblue:
             parameter = Parameter()
         parameter.contentDisposition = f'attachment; filename="{disposition}"'
         bar_format = "{l_bar}{bar}| {n:.02f}/{total:.02f} %  [{elapsed}<{remaining}, {rate_fmt}{postfix}]"
-        with open(file_path, 'r') as f:
+        with open(file_path, 'rb') as f:
             pbar = tqdm(total=100, desc=f"Uploading {disposition}", smoothing=0.01, bar_format=bar_format,
                         disable=not progress_bar)
-            f.seek(0)
             if size < _DEFAULT_CHUNK_SIZE * 2:
-                self.write(object_key=object_key, data=f.buffer, parameter=parameter)
+
+                self.write(object_key=object_key, data=f.read(), parameter=parameter, token=token)
                 pbar.update(100)
                 pbar.close()
                 return
             chunks = split_size_by_part_size(size, chunk_size)
-            initial_key = self.init_upload_by_part(object_key, parameter).get('initialKey')
+            initial_key = self.init_upload_by_part(object_key, parameter, token).get('initialKey')
             part_string = []
+            uploaded = 0
             for c in chunks:
                 f.seek(c.Offset)
-                num_to_upload = min(chunk_size, size - c.Offset)
-                part_string.append(self.upload_by_part(object_key, initial_key, chunk_size=c.Size, number=c.Number,
-                                                       body=f.buffer.read(c.Size)).get('partString'))
-                percent = num_to_upload * 100 / (size + 1)
-                pbar.update(percent)
+                chunk_data = f.read(c.Size)
+                resp = self.upload_by_part(
+                    object_key, initial_key, chunk_size=c.Size, number=c.Number,
+                    body=chunk_data, token=token
+                )
+                part_string.append(resp.get('partString'))
+                uploaded += c.Size
+                percent = uploaded * 100 / size
+                pbar.n = percent
+                pbar.refresh()
+            pbar.update(100 - pbar.n)
             pbar.close()
-            return self.complete_upload_by_part(object_key, initial_key, part_string)
+            return self.complete_upload_by_part(object_key, initial_key, part_string, token)
 
     def download_from_file(self):
 
@@ -213,7 +233,7 @@ class Tiefblue:
     def _parse_ap_name_and_tag(self, input_path: str):
         l = input_path.split('/')
         if len(l) < 3:
-            return "", "". l
+            return "", "", l
         return l[0], l[1], "/".join(l[2:])
 
 

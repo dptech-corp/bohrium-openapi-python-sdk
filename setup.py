@@ -10,8 +10,8 @@ def read_file(filename):
 
 
 setup(
-    name="bohrium",
-    version="0.1.0",
+    name="bohrium-sdk",
+    version="0.13.0",
     author="dingzhaohan",
     author_email="dingzh@dp.tech",
     url="https://github.com/dingzhaohan",
@@ -24,7 +24,15 @@ setup(
         # include .txt all of them
         "": ["*.txt"]
     },
-    install_requires=[],
+    install_requires=[
+        "distro",
+        "httpx",
+        "typing_extensions",
+        "anyio",
+        "pyhumps",
+        "requests",
+        "tqdm",
+    ],
     python_requires=">=3.7",
     entry_points={},
 )
