@@ -79,31 +79,31 @@ def main():
 
     print("\n" + "="*50 + "\n")
 
-    # 3. 获取相关文献
-    print("3. 获取相关文献:")
-    print("-" * 50)
-    if query_id:
-        try:
-            papers_result = bohrium.sigma_search.get_papers(
-                query_id=query_id,
-                sort="RelevanceScore"
-            )
-            print("文献获取成功！")
-            papers = papers_result.get('list', [])
-            print(f"找到 {len(papers)} 篇相关文献")
+    # # 3. 获取相关文献
+    # print("3. 获取相关文献:")
+    # print("-" * 50)
+    # if query_id:
+    #     try:
+    #         papers_result = bohrium.sigma_search.get_papers(
+    #             query_id=query_id,
+    #             sort="RelevanceScore"
+    #         )
+    #         print("文献获取成功！")
+    #         papers = papers_result.get('list', [])
+    #         print(f"找到 {len(papers)} 篇相关文献")
             
-            if papers:
-                paper = papers[0]
-                print(f"第一篇文献标题: {paper.get('title')}")
-                print(f"第一篇文献作者: {', '.join(paper.get('author', [])[:3])}")
-                print(f"第一篇文献期刊: {paper.get('journal')}")
-                print(f"第一篇文献摘要: {paper.get('abstract', '')[:100]}...")
-        except Exception as e:
-            print(f"获取文献失败: {e}")
-    else:
-        print("跳过文献获取测试（缺少query_id）")
+    #         if papers:
+    #             paper = papers[0]
+    #             print(f"第一篇文献标题: {paper.get('title')}")
+    #             print(f"第一篇文献作者: {', '.join(paper.get('author', [])[:3])}")
+    #             print(f"第一篇文献期刊: {paper.get('journal')}")
+    #             print(f"第一篇文献摘要: {paper.get('abstract', '')[:100]}...")
+    #     except Exception as e:
+    #         print(f"获取文献失败: {e}")
+    # else:
+    #     print("跳过文献获取测试（缺少query_id）")
 
-    print("\n" + "="*50 + "\n")
+    # print("\n" + "="*50 + "\n")
 
     # 4. 获取总结内容
     print("4. 获取总结内容:")
@@ -135,70 +135,70 @@ def main():
 
     print("\n" + "="*50 + "\n")
 
-    # 5. 追问测试
-    print("5. 追问测试:")
-    print("-" * 50)
-    try:
-        follow_up_result = bohrium.sigma_search.follow_up_question(
-            session_uuid=session_uuid,
-            query="Transformer在音频处理中的应用"
-        )
-        print("追问成功！")
-        print(f"新问题ID: {follow_up_result.get('id')}")
-        print(f"新问题查询: {follow_up_result.get('query')}")
-        print(f"最后答案ID: {follow_up_result.get('lastAnswerID')}")
-    except Exception as e:
-        print(f"追问失败: {e}")
+    # # 5. 追问测试
+    # print("5. 追问测试:")
+    # print("-" * 50)
+    # try:
+    #     follow_up_result = bohrium.sigma_search.follow_up_question(
+    #         session_uuid=session_uuid,
+    #         query="Transformer在音频处理中的应用"
+    #     )
+    #     print("追问成功！")
+    #     print(f"新问题ID: {follow_up_result.get('id')}")
+    #     print(f"新问题查询: {follow_up_result.get('query')}")
+    #     print(f"最后答案ID: {follow_up_result.get('lastAnswerID')}")
+    # except Exception as e:
+    #     print(f"追问失败: {e}")
 
-    print("\n" + "="*50 + "\n")
+    # print("\n" + "="*50 + "\n")
 
-    # 6. 获取搜索历史
-    print("6. 获取搜索历史:")
-    print("-" * 50)
-    try:
-        history_result = bohrium.sigma_search.get_search_history()
-        print("搜索历史获取成功！")
-        sessions = history_result.get('sessions', [])
-        print(f"历史会话数量: {len(sessions)}")
+    # # 6. 获取搜索历史
+    # print("6. 获取搜索历史:")
+    # print("-" * 50)
+    # try:
+    #     history_result = bohrium.sigma_search.get_search_history()
+    #     print("搜索历史获取成功！")
+    #     sessions = history_result.get('sessions', [])
+    #     print(f"历史会话数量: {len(sessions)}")
         
-        for i, session in enumerate(sessions[:3]):
-            print(f"  会话{i+1}: {session.get('title')} ({session.get('uuid')})")
-            print(f"    创建时间: {session.get('createTime')}")
-            print(f"    状态: {session.get('status')}")
-    except Exception as e:
-        print(f"获取搜索历史失败: {e}")
+    #     for i, session in enumerate(sessions[:3]):
+    #         print(f"  会话{i+1}: {session.get('title')} ({session.get('uuid')})")
+    #         print(f"    创建时间: {session.get('createTime')}")
+    #         print(f"    状态: {session.get('status')}")
+    # except Exception as e:
+    #     print(f"获取搜索历史失败: {e}")
 
-    print("\n" + "="*50 + "\n")
+    # print("\n" + "="*50 + "\n")
 
-    # 7. 使用类型定义方式
-    print("7. 使用类型定义方式:")
-    print("-" * 50)
-    try:
-        # 创建会话请求
-        session_request = CreateSessionRequest(
-            query="深度学习在医疗诊断中的应用",
-            model="qwen",
-            discipline="LS",  # 生命科学
-            resource_id_list=[]
-        )
+    # # 7. 使用类型定义方式
+    # print("7. 使用类型定义方式:")
+    # print("-" * 50)
+    # try:
+    #     # 创建会话请求
+    #     session_request = CreateSessionRequest(
+    #         query="深度学习在医疗诊断中的应用",
+    #         model="qwen",
+    #         discipline="LS",  # 生命科学
+    #         resource_id_list=[]
+    #     )
         
-        session_result2 = bohrium.sigma_search.search_with_request(session_request)
-        print("使用类型定义创建会话成功！")
-        print(f"会话UUID: {session_result2.get('uuid')}")
-        print(f"会话标题: {session_result2.get('title')}")
+    #     session_result2 = bohrium.sigma_search.search_with_request(session_request)
+    #     print("使用类型定义创建会话成功！")
+    #     print(f"会话UUID: {session_result2.get('uuid')}")
+    #     print(f"会话标题: {session_result2.get('title')}")
         
-        # 追问请求
-        follow_up_request = FollowUpRequest(
-            session_uuid=session_result2.get('uuid'),
-            query="深度学习在医学影像分析中的具体应用"
-        )
+    #     # 追问请求
+    #     follow_up_request = FollowUpRequest(
+    #         session_uuid=session_result2.get('uuid'),
+    #         query="深度学习在医学影像分析中的具体应用"
+    #     )
         
-        follow_up_result2 = bohrium.sigma_search.search_with_request(follow_up_request)
-        print("使用类型定义追问成功！")
-        print(f"新问题ID: {follow_up_result2.get('id')}")
+    #     follow_up_result2 = bohrium.sigma_search.search_with_request(follow_up_request)
+    #     print("使用类型定义追问成功！")
+    #     print(f"新问题ID: {follow_up_result2.get('id')}")
         
-    except Exception as e:
-        print(f"使用类型定义方式失败: {e}")
+    # except Exception as e:
+    #     print(f"使用类型定义方式失败: {e}")
 
     print("\n=== 测试完成 ===")
 

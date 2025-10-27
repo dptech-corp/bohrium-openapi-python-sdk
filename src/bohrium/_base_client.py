@@ -193,6 +193,10 @@ class BaseClient(Generic[_HttpxClientT]):
             "params": merged_params,
         }
         
+        # 处理超时参数
+        if "timeout" in kwargs:
+            request_kwargs["timeout"] = kwargs["timeout"]
+        
         if json is not None:
             request_kwargs["json"] = json
             request_kwargs["headers"] = merged_headers

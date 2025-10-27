@@ -2,6 +2,7 @@ import logging
 from typing import Optional, List, Dict, Any, Union, Iterator
 from pprint import pprint
 import json
+import httpx
 
 from ..._resource import AsyncAPIResource, SyncAPIResource
 from ..._response import APIResponse
@@ -41,7 +42,7 @@ class SigmaSearch(SyncAPIResource):
         if kwargs:
             data.update(kwargs)
 
-        response = self._client.post("/openapi/v1/sigma-search/api/v1/ai_search/sessions", json=data)
+        response = self._client.post("/openapi/v1/sigma-search/api/v2/ai_search/sessions", json=data)
         log.info(response.json())
         return APIResponse(response).json.get("data")
 
@@ -53,7 +54,7 @@ class SigmaSearch(SyncAPIResource):
         """获取会话详情"""
         log.info(f"getting sigma search session: {uuid}")
 
-        response = self._client.get(f"/openapi/v1/sigma-search/api/v1/ai_search/sessions/{uuid}")
+        response = self._client.get(f"/openapi/v1/sigma-search/api/v1/ai_search/sessions_extended/{uuid}")
         log.info(response.json())
         return APIResponse(response).json.get("data")
 
@@ -85,24 +86,54 @@ class SigmaSearch(SyncAPIResource):
         """获取总结流式输出"""
         log.info(f"getting summary stream for query: {query_id}")
 
-        response = self._client.get(
-            f"/openapi/v1/sigma-search/api/v1/ai_search/questions/{query_id}/stream",
-            stream=True
-        )
-        
-        # 处理流式响应
-        for line in response.iter_lines():
-            if line:
-                line_str = line.decode('utf-8')
-                if line_str.startswith('event:data'):
-                    continue
-                elif line_str.startswith('data:'):
-                    try:
-                        data = json.loads(line_str[5:])  # 去掉 'data:' 前缀
-                        yield data
-                    except json.JSONDecodeError:
-                        log.warning(f"Failed to parse JSON: {line_str}")
-                        continue
+        try:
+            # 使用专门的流式HTTP客户端
+            import httpx
+            
+            # 创建专门的流式客户端，禁用缓冲
+            stream_client = httpx.Client(
+                timeout=httpx.Timeout(timeout=600.0, connect=10.0),
+                limits=httpx.Limits(max_connections=1, max_keepalive_connections=1)
+            )
+            
+            # 构建完整URL
+            url = f"{self._client._base_url}/openapi/v1/sigma-search/api/v1/ai_search/questions/{query_id}/stream"
+            
+            # 添加access key参数
+            params = {"accessKey": self._client.access_key}
+            
+            # 使用专门的流式请求头
+            headers = {
+                "Accept": "*/*",
+                "Connection": "keep-alive",
+                "Cache-Control": "no-cache"
+            }
+            
+            log.info("开始流式请求...")
+            
+            # 使用stream方法进行真正的流式请求
+            with stream_client.stream(
+                "GET", 
+                url, 
+                params=params, 
+                headers=headers
+            ) as response:
+                log.info(f"流式响应状态: {response.status_code}")
+                
+                if response.status_code != 200:
+                    log.error(f"流式请求失败: {response.status_code}")
+                    return
+                
+                # 逐行读取流式数据
+                for line in response.iter_lines():
+                    if line:
+                        log.debug(f"收到流式数据: {line[:100]}...")
+                        yield line.encode('utf-8')
+            
+            stream_client.close()
+        except Exception as e:
+            log.error(f"Stream error: {e}")
+            return
 
     def get_summary_content(
         self,
