@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>安装指南 &mdash; Bohrium OpenAPI Python SDK 0.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=4837f967"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="快速开始" href="quickstart.html" />
+    <link rel="prev" title="Bohrium OpenAPI Python SDK 文档" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Bohrium OpenAPI Python SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">内容目录:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">安装指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">系统要求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">安装方法</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pip">使用 pip 安装（推荐）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">从源码安装</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">开发模式安装</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">验证安装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">依赖包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">故障排除</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id9">常见问题</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">下一步</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/reference.html">API参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">示例代码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">常见问题 (FAQ)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/reference.html">API参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Bohrium OpenAPI Python SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">安装指南</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>安装指南<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页面将指导您安装 Bohrium OpenAPI Python SDK。</p>
+<section id="id2">
+<h2>系统要求<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.7 或更高版本</p></li>
+<li><p>pip 包管理器</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>安装方法<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="pip">
+<h3>使用 pip 安装（推荐）<a class="headerlink" href="#pip" title="Link to this heading"></a></h3>
+<p>最简单的方式是使用 pip 直接从 PyPI 安装：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>bohrium-sdk
+</pre></div>
+</div>
+<p>如果您使用的是 Python 3，可能需要使用 pip3：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>bohrium-sdk
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>从源码安装<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>如果您想从源码安装最新版本或进行开发，可以按以下步骤操作：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 克隆仓库</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dingzhaohan/bohrium-openapi-python-sdk.git
+<span class="nb">cd</span><span class="w"> </span>bohrium-openapi-python-sdk
+
+<span class="c1"># 安装依赖</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># 安装SDK</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h3>开发模式安装<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>如果您想参与SDK的开发，建议使用开发模式安装：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dingzhaohan/bohrium-openapi-python-sdk.git
+<span class="nb">cd</span><span class="w"> </span>bohrium-openapi-python-sdk
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id6">
+<h2>验证安装<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<p>安装完成后，您可以验证安装是否成功：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import bohrium; print(bohrium.__version__)&quot;</span>
+</pre></div>
+</div>
+<p>或者：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from bohrium import Bohrium; print(&#39;安装成功!&#39;)&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h2>依赖包<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<p>SDK主要依赖以下包：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.python-httpx.org/">httpx</a> - 用于HTTP请求</p></li>
+<li><p><a class="reference external" href="https://github.com/nficano/pyhumps">pyhumps</a> - 用于命名转换</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/typing-extensions/">typing_extensions</a> - 类型扩展支持</p></li>
+<li><p><a class="reference external" href="https://anyio.readthedocs.io/">anyio</a> - 异步IO支持</p></li>
+<li><p><a class="reference external" href="https://requests.readthedocs.io/">requests</a> - HTTP库</p></li>
+<li><p><a class="reference external" href="https://tqdm.github.io/">tqdm</a> - 进度条显示</p></li>
+<li><p><a class="reference external" href="https://github.com/python-distro/distro">distro</a> - 系统信息</p></li>
+</ul>
+<p>这些依赖会在安装SDK时自动安装。</p>
+</section>
+<section id="id8">
+<h2>故障排除<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<section id="id9">
+<h3>常见问题<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p><strong>问题</strong>: 安装时出现权限错误</p>
+<p><strong>解决方案</strong>: 使用 <code class="docutils literal notranslate"><span class="pre">--user</span></code> 标志安装到用户目录：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>bohrium-sdk
+</pre></div>
+</div>
+<p><strong>问题</strong>: Python版本不兼容</p>
+<p><strong>解决方案</strong>: 确保您的Python版本 &gt;= 3.7。可以使用以下命令检查：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
+</pre></div>
+</div>
+<p><strong>问题</strong>: 依赖包冲突</p>
+<p><strong>解决方案</strong>: 建议使用虚拟环境：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建虚拟环境</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+
+<span class="c1"># 激活虚拟环境 (Windows)</span>
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+
+<span class="c1"># 激活虚拟环境 (Linux/Mac)</span>
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+
+<span class="c1"># 安装SDK</span>
+pip<span class="w"> </span>install<span class="w"> </span>bohrium-sdk
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id10">
+<h2>下一步<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<p>安装完成后，请继续阅读 <a class="reference internal" href="quickstart.html"><span class="doc">快速开始</span></a> 开始使用SDK。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="index.html" class="btn btn-neutral float-left" title="Bohrium OpenAPI Python SDK 文档" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="快速开始" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2024, dingzhaohan。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
