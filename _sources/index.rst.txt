@@ -56,10 +56,12 @@ Bohrium OpenAPI Python SDK 是一个功能强大的Python库，用于与Bohrium�
 
 更多详细信息，请查看 :doc:`快速开始 <quickstart>` 和 :doc:`教程 <tutorial>`。
 
-Indices and tables
-==================
+索引和表格
+==========
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+* :ref:`genindex` - 完整索引（所有术语、函数、类等）
+* :ref:`modindex` - 模块索引（所有Python模块列表）
+
+.. note::
+   您可以使用页面左侧的搜索框快速查找文档内容。
 
