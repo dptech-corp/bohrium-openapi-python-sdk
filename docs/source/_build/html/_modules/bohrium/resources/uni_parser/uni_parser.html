@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bohrium.resources.uni_parser.uni_parser &mdash; Bohrium OpenAPI Python SDK 0.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=4837f967"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Bohrium OpenAPI Python SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">内容目录:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial.html">教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/reference.html">API参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">示例代码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq.html">常见问题 (FAQ)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/reference.html">API参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Bohrium OpenAPI Python SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">模块代码</a></li>
+      <li class="breadcrumb-item active">bohrium.resources.uni_parser.uni_parser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>bohrium.resources.uni_parser.uni_parser 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">BinaryIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..._resource</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncAPIResource</span><span class="p">,</span> <span class="n">SyncAPIResource</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..._response</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...types.uni_parser.uni_parser</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FileParseRequest</span><span class="p">,</span>
+    <span class="n">URLParseRequest</span><span class="p">,</span>
+    <span class="n">ImageParseRequest</span><span class="p">,</span>
+    <span class="n">ParseResultRequest</span><span class="p">,</span>
+    <span class="n">ParseFormattedRequest</span><span class="p">,</span>
+    <span class="n">ParseParagraphsRequest</span>
+<span class="p">)</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="UniParser">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser">[文档]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UniParser</span><span class="p">(</span><span class="n">SyncAPIResource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;通用解析器相关接口&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UniParser.trigger_file_async">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.trigger_file_async">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_file_async</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+        <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">textual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">molecule</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">figure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">expression</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">equation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">pages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">admin_debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1800</span><span class="p">,</span>
+        <span class="n">table_cls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">ordering_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gap_tree&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;提交PDF文件进行异步/同步解析&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;triggering file async parse: sync=</span><span class="si">{</span><span class="n">sync</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># 准备文件数据</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># 文件路径</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">),</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">),</span> <span class="s2">&quot;application/pdf&quot;</span><span class="p">)}</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;upload.pdf&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s2">&quot;application/pdf&quot;</span><span class="p">)}</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">):</span>
+            <span class="c1"># 文件对象</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;upload.pdf&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s2">&quot;application/pdf&quot;</span><span class="p">)}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;file must be a file path, file object, or bytes&quot;</span><span class="p">)</span>
+        <span class="c1"># 将表单数据合并到files中</span>
+        <span class="n">form_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;lang&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lang</span><span class="p">),</span>
+            <span class="s1">&#39;sync&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sync</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">form_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        
+        <span class="c1"># 将表单数据添加到files中</span>
+        <span class="n">files</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form_data</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+            
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/parse/trigger-file-async&quot;</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;accessKey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">access_key</span><span class="p">})</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+
+<div class="viewcode-block" id="UniParser.trigger_url_async">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.trigger_url_async">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_url_async</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+        <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">textual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">molecule</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">figure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">expression</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">equation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">pages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">admin_debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1800</span><span class="p">,</span>
+        <span class="n">table_cls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">ordering_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gap_tree&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;提交PDF文件链接进行异步/同步解析&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;triggering URL async parse: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">, sync=</span><span class="si">{</span><span class="n">sync</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+            <span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="n">lang</span><span class="p">,</span>
+            <span class="s2">&quot;sync&quot;</span><span class="p">:</span> <span class="n">sync</span><span class="p">,</span>
+            <span class="s2">&quot;textual&quot;</span><span class="p">:</span> <span class="n">textual</span><span class="p">,</span>
+            <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span>
+            <span class="s2">&quot;molecule&quot;</span><span class="p">:</span> <span class="n">molecule</span><span class="p">,</span>
+            <span class="s2">&quot;chart&quot;</span><span class="p">:</span> <span class="n">chart</span><span class="p">,</span>
+            <span class="s2">&quot;figure&quot;</span><span class="p">:</span> <span class="n">figure</span><span class="p">,</span>
+            <span class="s2">&quot;expression&quot;</span><span class="p">:</span> <span class="n">expression</span><span class="p">,</span>
+            <span class="s2">&quot;equation&quot;</span><span class="p">:</span> <span class="n">equation</span><span class="p">,</span>
+            <span class="s2">&quot;admin_debug&quot;</span><span class="p">:</span> <span class="n">admin_debug</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="n">timeout</span><span class="p">,</span>
+            <span class="s2">&quot;table_cls&quot;</span><span class="p">:</span> <span class="n">table_cls</span><span class="p">,</span>
+            <span class="s2">&quot;ordering_method&quot;</span><span class="p">:</span> <span class="n">ordering_method</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">pages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pages&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pages</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/parse/trigger-url-async&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+<div class="viewcode-block" id="UniParser.trigger_snip_async">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.trigger_snip_async">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_snip_async</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">img</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+        <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">textual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">table</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">molecule</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">figure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">expression</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">equation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">pages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">admin_debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1800</span><span class="p">,</span>
+        <span class="n">table_cls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">ordering_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gap_tree&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;提交图片或截图进行异步/同步解析&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;triggering snip async parse: sync=</span><span class="si">{</span><span class="n">sync</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># 处理图片数据</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># 如果是base64字符串，直接使用</span>
+            <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;data:image&#39;</span><span class="p">):</span>
+                <span class="n">img_data</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">img</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">img</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">img</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;C:&#39;</span><span class="p">):</span>
+                <span class="c1"># 如果字符串较长且不是路径，认为是base64数据</span>
+                <span class="n">img_data</span> <span class="o">=</span> <span class="n">img</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># 如果是文件路径，读取并编码</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">img_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">img_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;img must be a file path, base64 string, or bytes&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># 准备表单数据，使用multipart/form-data格式</span>
+        <span class="n">form_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;lang&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lang</span><span class="p">),</span>
+            <span class="s1">&#39;sync&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sync</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;textual&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">textual</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;molecule&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;chart&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">chart</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;figure&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;expression&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;equation&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">equation</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;admin_debug&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">admin_debug</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;timeout&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">timeout</span><span class="p">),</span>
+            <span class="s1">&#39;table_cls&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">table_cls</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="s1">&#39;ordering_method&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ordering_method</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">pages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pages</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">form_data</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">form_data</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pages</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">form_data</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-1&quot;</span>
+        
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">form_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        
+        <span class="c1"># 将图片数据作为表单字段传递</span>
+        <span class="n">form_data</span><span class="p">[</span><span class="s1">&#39;img&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">img_data</span>
+        
+        <span class="c1"># 将表单数据添加到files中</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form_data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/parse/trigger-snip-async&quot;</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;accessKey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">access_key</span><span class="p">})</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+
+<div class="viewcode-block" id="UniParser.get_result">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.get_result">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_result</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">return_half</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">objects</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">pages_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">molecule_source</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;根据Token索引解析结果&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getting parse result for token: </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+            <span class="s2">&quot;return_half&quot;</span><span class="p">:</span> <span class="n">return_half</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+            <span class="s2">&quot;objects&quot;</span><span class="p">:</span> <span class="n">objects</span><span class="p">,</span>
+            <span class="s2">&quot;pages_dict&quot;</span><span class="p">:</span> <span class="n">pages_dict</span><span class="p">,</span>
+            <span class="s2">&quot;molecule_source&quot;</span><span class="p">:</span> <span class="n">molecule_source</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/parse/get-result&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="c1"># 检查响应是否包含data字段，如果没有则直接返回整个响应</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+
+<div class="viewcode-block" id="UniParser.get_formatted">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.get_formatted">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_formatted</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">return_half</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">objects</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">pages_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">textual</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">table</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">molecule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">chart</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">figure</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">equation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;markup&quot;</span><span class="p">,</span>
+        <span class="n">molecule_source</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;根据Token索引解析结果并进行指定格式化&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getting formatted parse result for token: </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+            <span class="s2">&quot;return_half&quot;</span><span class="p">:</span> <span class="n">return_half</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+            <span class="s2">&quot;objects&quot;</span><span class="p">:</span> <span class="n">objects</span><span class="p">,</span>
+            <span class="s2">&quot;pages_dict&quot;</span><span class="p">:</span> <span class="n">pages_dict</span><span class="p">,</span>
+            <span class="s2">&quot;textual&quot;</span><span class="p">:</span> <span class="n">textual</span><span class="p">,</span>
+            <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span>
+            <span class="s2">&quot;molecule&quot;</span><span class="p">:</span> <span class="n">molecule</span><span class="p">,</span>
+            <span class="s2">&quot;chart&quot;</span><span class="p">:</span> <span class="n">chart</span><span class="p">,</span>
+            <span class="s2">&quot;figure&quot;</span><span class="p">:</span> <span class="n">figure</span><span class="p">,</span>
+            <span class="s2">&quot;expression&quot;</span><span class="p">:</span> <span class="n">expression</span><span class="p">,</span>
+            <span class="s2">&quot;equation&quot;</span><span class="p">:</span> <span class="n">equation</span><span class="p">,</span>
+            <span class="s2">&quot;molecule_source&quot;</span><span class="p">:</span> <span class="n">molecule_source</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/parse/get-formatted&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+
+<div class="viewcode-block" id="UniParser.get_paragraphs">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.get_paragraphs">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_paragraphs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;根据Token索引分段落的解析结果&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getting paragraphs for token: </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="n">token</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+            
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/parse/get-paragraphs&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+
+<div class="viewcode-block" id="UniParser.parse_with_request">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.UniParser.parse_with_request">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_with_request</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FileParseRequest</span><span class="p">,</span> <span class="n">URLParseRequest</span><span class="p">,</span> <span class="n">ImageParseRequest</span><span class="p">,</span> <span class="n">ParseResultRequest</span><span class="p">,</span> <span class="n">ParseFormattedRequest</span><span class="p">,</span> <span class="n">ParseParagraphsRequest</span><span class="p">]</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;使用请求对象进行解析或查询&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">FileParseRequest</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_file_async</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">URLParseRequest</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_url_async</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">ImageParseRequest</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger_snip_async</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">ParseResultRequest</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">ParseFormattedRequest</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_formatted</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">ParseParagraphsRequest</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_paragraphs</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;request must be one of the supported request types&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AsyncUniParser">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.uni_parser.AsyncUniParser">[文档]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AsyncUniParser</span><span class="p">(</span><span class="n">AsyncAPIResource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;异步通用解析器相关接口&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2024, dingzhaohan。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

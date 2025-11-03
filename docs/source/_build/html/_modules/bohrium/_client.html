@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bohrium._client &mdash; Bohrium OpenAPI Python SDK 0.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=4837f967"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bohrium OpenAPI Python SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">内容目录:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/reference.html">API参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">示例代码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">常见问题 (FAQ)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/reference.html">API参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bohrium OpenAPI Python SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">模块代码</a></li>
+      <li class="breadcrumb-item active">bohrium._client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>bohrium._client 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">httpx</span><span class="w"> </span><span class="kn">import</span> <span class="n">URL</span><span class="p">,</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Response</span><span class="p">,</span> <span class="n">Timeout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">override</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">_exceptions</span><span class="p">,</span> <span class="n">resources</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._base_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_MAX_RETRIES</span><span class="p">,</span> <span class="n">AsyncAPIClient</span><span class="p">,</span> <span class="n">SyncAPIClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIStatusError</span><span class="p">,</span> <span class="n">BohriumError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._version</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+
+
+<div class="viewcode-block" id="Bohrium">
+<a class="viewcode-back" href="../../api/reference.html#bohrium.Bohrium">[文档]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bohrium</span><span class="p">(</span><span class="n">SyncAPIClient</span><span class="p">):</span>
+    <span class="n">job</span><span class="p">:</span> <span class="n">resources</span><span class="o">.</span><span class="n">Job</span>
+    <span class="n">sigma_search</span><span class="p">:</span> <span class="n">resources</span><span class="o">.</span><span class="n">SigmaSearch</span>
+    <span class="n">uni_parser</span><span class="p">:</span> <span class="n">resources</span><span class="o">.</span><span class="n">UniParser</span>
+    <span class="n">knowledge_base</span><span class="p">:</span> <span class="n">resources</span><span class="o">.</span><span class="n">KnowledgeBase</span>
+    <span class="n">paper</span><span class="p">:</span> <span class="n">resources</span><span class="o">.</span><span class="n">Paper</span>
+
+    <span class="c1"># client options</span>
+    <span class="n">access_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">project_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">access_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">app_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">URL</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">project_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Timeout</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+        <span class="n">max_retries</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_MAX_RETRIES</span><span class="p">,</span>
+        <span class="n">http_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a new synchronous openai client instance.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">access_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">access_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BOHRIUM_ACCESS_KEY&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">access_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BohriumError</span><span class="p">(</span>
+                <span class="s2">&quot;The api_key client option must be set either by passing api_key to the client or by setting the ACCESS_KEY environment variable&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_key</span> <span class="o">=</span> <span class="n">access_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app_key</span> <span class="o">=</span> <span class="n">app_key</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BOHRIUM_APP_KEY&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;accessKey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_key</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">project_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">project_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BOHRIUM_PROJECT_ID&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_id</span> <span class="o">=</span> <span class="n">project_id</span>
+
+        <span class="k">if</span> <span class="n">base_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">base_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BOHRIUM_BASE_URL&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">base_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://openapi.dp.tech&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">_version</span><span class="o">=</span><span class="n">__version__</span><span class="p">,</span>
+            <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">,</span>
+            <span class="n">max_retries</span><span class="o">=</span><span class="n">max_retries</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+            <span class="n">http_client</span><span class="o">=</span><span class="n">http_client</span><span class="p">,</span>
+            <span class="n">custom_headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_headers</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">Job</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma_search</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">SigmaSearch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uni_parser</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">UniParser</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knowledge_base</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">KnowledgeBase</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paper</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">Paper</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">access_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;x-app-key&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_key</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_status_error</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">err_msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">APIStatusError</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">)</span> <span class="k">else</span> <span class="n">body</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">BadRequestError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">AuthenticationError</span><span class="p">(</span>
+                <span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">PermissionDeniedError</span><span class="p">(</span>
+                <span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">ConflictError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">422</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">UnprocessableEntityError</span><span class="p">(</span>
+                <span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">RateLimitError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&gt;=</span> <span class="mi">500</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_exceptions</span><span class="o">.</span><span class="n">InternalServerError</span><span class="p">(</span>
+                <span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">APIStatusError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AsyncBohrium">
+<a class="viewcode-back" href="../../api/reference.html#bohrium.AsyncBohrium">[文档]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AsyncBohrium</span><span class="p">(</span><span class="n">AsyncAPIClient</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2024, dingzhaohan。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

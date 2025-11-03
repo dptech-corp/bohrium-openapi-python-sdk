@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>快速开始 &mdash; Bohrium OpenAPI Python SDK 0.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=4837f967"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="教程" href="tutorial.html" />
+    <link rel="prev" title="安装指南" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Bohrium OpenAPI Python SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">内容目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装指南</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">快速开始</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#api">配置API密钥</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">方式1: 环境变量（推荐）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">方式2: 直接传入参数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">方式3: 混合使用</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">初始化客户端</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">同步客户端</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">异步客户端</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">基本使用示例</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id9">任务管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sigma">Sigma搜索</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">通用解析器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">知识库</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">论文管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">错误处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">配置选项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">下一步</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/reference.html">API参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">示例代码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">常见问题 (FAQ)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/reference.html">API参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Bohrium OpenAPI Python SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">快速开始</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>快速开始<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本指南将帮助您快速上手使用 Bohrium OpenAPI Python SDK。</p>
+<section id="api">
+<h2>配置API密钥<a class="headerlink" href="#api" title="Link to this heading"></a></h2>
+<p>使用SDK前，您需要配置API密钥。有三种方式：</p>
+<section id="id2">
+<h3>方式1: 环境变量（推荐）<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>设置环境变量是最安全的方式：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Linux/Mac</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BOHRIUM_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;your_access_key_here&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BOHRIUM_APP_KEY</span><span class="o">=</span><span class="s2">&quot;your_app_key_here&quot;</span><span class="w">  </span><span class="c1"># 可选</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BOHRIUM_PROJECT_ID</span><span class="o">=</span><span class="s2">&quot;your_project_id&quot;</span><span class="w">  </span><span class="c1"># 可选</span>
+
+<span class="c1"># Windows PowerShell</span>
+<span class="nv">$env</span>:BOHRIUM_ACCESS_KEY<span class="o">=</span><span class="s2">&quot;your_access_key_here&quot;</span>
+<span class="nv">$env</span>:BOHRIUM_APP_KEY<span class="o">=</span><span class="s2">&quot;your_app_key_here&quot;</span>
+<span class="nv">$env</span>:BOHRIUM_PROJECT_ID<span class="o">=</span><span class="s2">&quot;your_project_id&quot;</span>
+
+<span class="c1"># Windows CMD</span>
+<span class="nb">set</span><span class="w"> </span><span class="nv">BOHRIUM_ACCESS_KEY</span><span class="o">=</span>your_access_key_here
+<span class="nb">set</span><span class="w"> </span><span class="nv">BOHRIUM_APP_KEY</span><span class="o">=</span>your_app_key_here
+<span class="nb">set</span><span class="w"> </span><span class="nv">BOHRIUM_PROJECT_ID</span><span class="o">=</span>your_project_id
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>方式2: 直接传入参数<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span>
+    <span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key_here&quot;</span><span class="p">,</span>
+    <span class="n">app_key</span><span class="o">=</span><span class="s2">&quot;your_app_key_here&quot;</span><span class="p">,</span>  <span class="c1"># 可选</span>
+    <span class="n">project_id</span><span class="o">=</span><span class="s2">&quot;your_project_id&quot;</span>  <span class="c1"># 可选</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>方式3: 混合使用<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>可以同时使用环境变量和参数，参数会覆盖环境变量：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="c1"># access_key从环境变量读取，其他参数直接传入</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span>
+    <span class="n">app_key</span><span class="o">=</span><span class="s2">&quot;your_app_key_here&quot;</span><span class="p">,</span>
+    <span class="n">project_id</span><span class="o">=</span><span class="s2">&quot;your_project_id&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h2>初始化客户端<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<section id="id6">
+<h3>同步客户端<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>大多数情况下，使用同步客户端即可：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h3>异步客户端<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>对于需要并发处理的场景，可以使用异步客户端：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncBohrium</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">AsyncBohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+    <span class="c1"># 使用异步方法</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># 运行异步代码</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id8">
+<h2>基本使用示例<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<section id="id9">
+<h3>任务管理<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+
+<span class="c1"># 列出所有任务</span>
+<span class="n">jobs</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+
+<span class="c1"># 获取特定任务</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">job_id</span><span class="o">=</span><span class="s2">&quot;job_id_here&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sigma">
+<h3>Sigma搜索<a class="headerlink" href="#sigma" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+
+<span class="c1"># 执行搜索</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">sigma_search</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;your_search_query&quot;</span><span class="p">,</span>
+    <span class="c1"># 其他参数...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h3>通用解析器<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+
+<span class="c1"># 解析文件</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">uni_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+    <span class="n">file_path</span><span class="o">=</span><span class="s2">&quot;path/to/file&quot;</span><span class="p">,</span>
+    <span class="c1"># 其他参数...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h3>知识库<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+
+<span class="c1"># 列出知识库</span>
+<span class="n">knowledge_bases</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">knowledge_base</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id12">
+<h3>论文管理<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+
+<span class="c1"># 列出论文</span>
+<span class="n">papers</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">paper</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id13">
+<h2>错误处理<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<p>SDK提供了详细的错误类型：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bohrium._exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AuthenticationError</span><span class="p">,</span>
+    <span class="n">PermissionDeniedError</span><span class="p">,</span>
+    <span class="n">NotFoundError</span><span class="p">,</span>
+    <span class="n">RateLimitError</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span><span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">job_id</span><span class="o">=</span><span class="s2">&quot;invalid_id&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">AuthenticationError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;认证失败，请检查API密钥&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">PermissionDeniedError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;权限不足&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">NotFoundError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;资源不存在&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">RateLimitError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;请求频率过高，请稍后重试&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;其他错误: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h2>配置选项<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<p>客户端支持多种配置选项：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bohrium</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohrium</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Bohrium</span><span class="p">(</span>
+    <span class="n">access_key</span><span class="o">=</span><span class="s2">&quot;your_access_key&quot;</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://openapi.dp.tech&quot;</span><span class="p">,</span>  <span class="c1"># 自定义API地址</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>  <span class="c1"># 请求超时时间（秒）</span>
+    <span class="n">max_retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># 最大重试次数</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id15">
+<h2>下一步<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>查看 <a class="reference internal" href="tutorial.html"><span class="doc">教程</span></a> 了解更多详细用法</p></li>
+<li><p>查看 <a class="reference internal" href="api/reference.html"><span class="doc">API参考</span></a> 了解完整的API参考</p></li>
+<li><p>查看 <a class="reference internal" href="examples.html"><span class="doc">示例代码</span></a> 查看更多示例代码</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="installation.html" class="btn btn-neutral float-left" title="安装指南" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="教程" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2024, dingzhaohan。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
