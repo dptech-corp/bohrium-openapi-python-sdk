@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bohrium.resources.job.job &mdash; Bohrium OpenAPI Python SDK 0.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=4837f967"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Bohrium OpenAPI Python SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">内容目录:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorial.html">教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/reference.html">API参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">示例代码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq.html">常见问题 (FAQ)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/reference.html">API参考</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Bohrium OpenAPI Python SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">模块代码</a></li>
+      <li class="breadcrumb-item active">bohrium.resources.job.job</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>bohrium.resources.job.job 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">humps</span>
+<span class="c1"># from ..._resource import BaseClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..._resource</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncAPIResource</span><span class="p">,</span> <span class="n">SyncAPIResource</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..._response</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...types.job.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobAddRequest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tiefblue.tiefblue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tiefblue</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">USE_SANDBOX</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;BOHRIUM_USE_SANDBOX&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Job">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job">[文档]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Job</span><span class="p">(</span><span class="n">SyncAPIResource</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Job.create">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.create">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;projectId&#39;</span><span class="p">:</span> <span class="n">project_id</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="n">group_id</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;bohrGroupId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_id</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/openapi/v1/sandbox/job/create&#39;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;/openapi/v1/job/create&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+    
+<div class="viewcode-block" id="Job.detail">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.detail">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">detail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;detail job </span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/openapi/v1/sandbox/job/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;/openapi/v1/job/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">APIResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span></div>
+
+        <span class="c1">#return response.json().get(&quot;data&quot;)</span>
+
+<div class="viewcode-block" id="Job.submit">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.submit">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">job_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">machine_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">image_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">job_group_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">result</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">dataset_path</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">log_files</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">out_files</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">):</span>
+        <span class="c1"># log.info(f&quot;submit job {name},project_id:{project_id}&quot;)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_job</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">job_name</span><span class="p">,</span> <span class="n">job_group_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">work_dir</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uploadr</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;storePath&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;token&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
+                <span class="n">object_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;storePath&quot;</span><span class="p">],</span> <span class="n">file_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">object_key</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;token&quot;</span><span class="p">])</span>
+
+        <span class="n">ep</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;_temp.zip&quot;</span><span class="p">)</span>
+
+        <span class="n">job_add_request</span> <span class="o">=</span> <span class="n">JobAddRequest</span><span class="p">(</span>
+            <span class="n">download_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()),</span>
+            <span class="n">dataset_path</span><span class="o">=</span><span class="n">dataset_path</span><span class="p">,</span>
+            <span class="n">job_name</span><span class="o">=</span><span class="n">job_name</span><span class="p">,</span>
+            <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span>
+            <span class="n">job_id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;jobId&quot;</span><span class="p">],</span>
+            <span class="n">oss_path</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;storePath&quot;</span><span class="p">],</span>
+            <span class="n">image_name</span><span class="o">=</span><span class="n">image_address</span><span class="p">,</span>
+            <span class="n">scass_type</span><span class="o">=</span><span class="n">machine_type</span><span class="p">,</span>
+            <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
+            <span class="n">log_files</span><span class="o">=</span><span class="n">log_files</span><span class="p">,</span>
+            <span class="n">out_files</span><span class="o">=</span><span class="n">out_files</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">job_add_request</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Job.insert">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.insert">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">camel_data</span> <span class="o">=</span> <span class="p">{</span><span class="n">humps</span><span class="o">.</span><span class="n">camelize</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;ossPath&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;ossPath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;ossPath&#39;</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="s1">&#39;logFile&#39;</span> <span class="ow">in</span> <span class="n">camel_data</span><span class="p">:</span>
+            <span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;logFiles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;logFile&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;logFiles&#39;</span> <span class="ow">in</span> <span class="n">camel_data</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;logFiles&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;logFiles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">camel_data</span><span class="p">[</span><span class="s1">&#39;logFiles&#39;</span><span class="p">]]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/openapi/v1/sandbox/job/add&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="s2">&quot;/openapi/v2/job/add&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">camel_data</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[insert] json=</span><span class="si">{</span><span class="n">camel_data</span><span class="si">}</span><span class="s1">, response=</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Job.delete">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.delete">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">):</span>
+        <span class="c1"># log.info(f&quot;delete job {job_id}&quot;)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/openapi/v1/sandbox/job/del/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;/openapi/v1/job/del/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Job.terminate">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.terminate">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">):</span>
+        <span class="c1"># log.info(f&quot;terminate job {job_id}&quot;)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/openapi/v1/sandbox/job/terminate/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;/openapi/v1/job/terminate/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Job.kill">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.kill">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">kill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">):</span>
+        <span class="c1"># log.info(f&quot;kill job {job_id}&quot;)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/openapi/v1/sandbox/job/kill/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;/openapi/v1/job/kill/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="Job.log">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.log">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="s2">&quot;STDOUTERR&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">page_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
+        <span class="c1"># log.info(f&quot;log job {job_id}&quot;)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;/openapi/v1/sandbox/job/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">/log&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;/openapi/v1/job/</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">/log&quot;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;logFile&quot;</span><span class="p">:</span> <span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span> <span class="s2">&quot;pageSize&quot;</span><span class="p">:</span> <span class="n">page_size</span><span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Job.create_job">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.create_job">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_job</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">project_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">group_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># log.info(f&quot;create job {name}&quot;)</span>
+        <span class="c1"># response = self._client.get(&quot;/openapi/v1/ak/get&quot;)</span>
+
+        <span class="c1"># data = {</span>
+        <span class="c1">#     &quot;userId&quot;: response.json().get(&quot;data&quot;).get(&quot;user_id&quot;),</span>
+        <span class="c1">#     &quot;projectId&quot;: project_id,</span>
+        <span class="c1">#     &quot;name&quot;: name,</span>
+        <span class="c1">#     &quot;bohrGroupId&quot;: group_id,</span>
+        <span class="c1"># }</span>
+        <span class="c1"># response = self._client.post(&quot;/openapi/v1/job/pre_create&quot;, json=data)</span>
+        <span class="c1"># pprint(response.request)</span>
+        <span class="c1"># print(response.json())</span>
+        <span class="c1"># return response.json().get(&quot;data&quot;)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;projectId&quot;</span><span class="p">:</span> <span class="n">project_id</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;bohrGroupId&quot;</span><span class="p">:</span> <span class="n">group_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/openapi/v1/sandbox/job/create&quot;</span> <span class="k">if</span> <span class="n">USE_SANDBOX</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;/openapi/v1/job/create&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Job.create_job_group">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.create_job_group">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_job_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">job_group_name</span><span class="p">):</span>
+        <span class="c1"># log.info(f&quot;create job group {job_group_name}&quot;)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s2">&quot;/openapi/v1/job_group/add&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">job_group_name</span><span class="p">,</span> <span class="s2">&quot;projectId&quot;</span><span class="p">:</span> <span class="n">project_id</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Job.upload">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.upload">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">object_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">tiefblue</span> <span class="o">=</span> <span class="n">Tiefblue</span><span class="p">()</span>
+        <span class="n">tiefblue</span><span class="o">.</span><span class="n">upload_From_file_multi_part</span><span class="p">(</span>
+            <span class="n">object_key</span><span class="o">=</span><span class="n">object_key</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Job.uploadr">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.uploadr">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uploadr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">store_path</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">work_dir</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="n">work_dir</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+                <span class="n">object_key</span> <span class="o">=</span> <span class="n">full_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">store_path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">object_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Job.download">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.Job.download">[文档]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">,</span> <span class="n">save_path</span><span class="p">):</span>
+        <span class="n">detail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detail</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+        <span class="n">tiefblue</span> <span class="o">=</span> <span class="n">Tiefblue</span><span class="p">()</span>
+        <span class="n">tiefblue</span><span class="o">.</span><span class="n">download_from_url</span><span class="p">(</span><span class="n">detail</span><span class="p">[</span><span class="s2">&quot;resultUrl&quot;</span><span class="p">],</span> <span class="n">save_path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AsyncJob">
+<a class="viewcode-back" href="../../../../api/reference.html#bohrium.resources.job.AsyncJob">[文档]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AsyncJob</span><span class="p">(</span><span class="n">AsyncAPIResource</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2024, dingzhaohan。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
